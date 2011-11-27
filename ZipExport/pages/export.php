@@ -111,6 +111,19 @@
 			        $t_issue_contents .= '<tr><td>' . lang_get('os') .'</td><td>'  .  $t_bug->os  .'</td></tr>';
 			        $t_issue_contents .= '<tr><td>' . lang_get('os_version') .'</td><td>'  . $t_bug->os_version .'</td></tr>';
 			    }
+			    
+			    // custom fields
+			    $t_related_custom_field_ids = custom_field_get_linked_ids( $t_bug->project_id );
+			    
+			    foreach( $t_related_custom_field_ids as $t_id ) {
+			        if ( !custom_field_has_read_access( $t_id, $t_bug->id ) )
+			            continue;
+			    
+			        $t_def = custom_field_get_definition( $t_id );
+			        
+			        $t_issue_contents .= '<tr><td>' . lang_get_defaulted( $t_def['name'] ) .'</td><td>'  . string_custom_field_value( $t_def, $t_id, $t_bug->id ) .'</td></tr>';
+			    }
+			    
 			    $t_issue_contents .= '</table>';
 			    			    
 			    $t_issue_contents .= "</body></html>";
