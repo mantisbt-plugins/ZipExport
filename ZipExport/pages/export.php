@@ -146,7 +146,7 @@
 			    
 			    // bug notes
 			    
-			    $t_bugnotes = bugnote_get_all_visible_bugnotes( $t_bug->id );
+			    $t_bugnotes = bugnote_get_all_visible_bugnotes( $t_bug->id , 'DESC', 0);
 			    
 			    if ( count ( $t_bugnotes ) > 0 ) {
 			        
