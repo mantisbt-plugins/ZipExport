@@ -26,9 +26,6 @@
 
 	require( 'print_all_bug_options_inc.php' );
 	
-	const COLUMN_INDEX_LAST_NOTE_1 = 4;
-	const COLUMN_INDEX_LAST_NOTE_2 = 10;
-
 	auth_ensure_user_authenticated();
 
 	$t_required_level = plugin_config_get('export_access_level_threshold');
@@ -57,10 +54,14 @@
 
 	$f_bug_arr = explode( ',', $f_export );
 	
-	$file = '/tmp/file.zip';
+	$file = tempnam("tmp", "zip");
 	$zip = new ZipArchive();
-	$zip->open($file, ZIPARCHIVE::CREATE);
+	$zip->open($file, ZIPARCHIVE::OVERWRITE);
 
+	$t_user_id = auth_get_current_user_id();
+	
+	$t_bug_file_table = db_get_table( 'mantis_bug_file_table' );
+	
 	do
 	{
 		$t_more = true;
@@ -73,8 +74,49 @@
 			$t_bug = null;
 
 			if ( is_blank( $f_export ) || in_array( $t_row->id, $f_bug_arr ) ) {
-			    $zip->addFromString($t_row->id .'.txt', 'Here is a bug file');
-
+			    
+			    $zip->addEmptyDir($t_row->id);
+			    $zip->addFromString($t_row->id .'/bug.txt', 'Here is a bug file');
+			    
+			    if ( file_can_download_bug_attachments( $t_row->id, $t_user_id ) ) {
+    			    $t_attachments = bug_get_attachments( $t_row->id );
+    			    if ( sizeof ( $t_attachments ) > 0 ) {
+    			        foreach ( $t_attachments as $t_attachment ) {
+    			            
+    			            $t_file_contents;
+    			            
+    			            switch ( config_get( 'file_upload_method' ) ) {
+    			                
+    			                case DISK:
+    			                    $t_local_disk_file = file_normalize_attachment_path( $t_attachment['diskfile'], $t_project_id );
+    			                    $t_file_contents = file_get_contents($t_local_disk_file);
+    			                    break;
+    			                    
+    			                case FTP:
+    			                    $t_local_disk_file = file_normalize_attachment_path( $t_attachment['diskfile'], $t_project_id );
+    			                    
+    			                    if ( !file_exists( $t_local_disk_file ) ) {
+    			                        $ftp = file_ftp_connect();
+    			                        file_ftp_get ( $ftp, $t_local_disk_file, $t_attachment['diskfile'] );
+    			                        file_ftp_disconnect( $ftp );
+    			                    }
+    			                    $t_file_contents = file_get_contents($t_local_disk_file);
+    			                    break;
+    			                    
+    			                case DATABASE:
+    			                    
+    			                    $t_content_query =  "SELECT content FROM $t_bug_file_table WHERE id=" . db_param();
+    			                    $t_content_result = db_query_bound( $t_content_query, Array( $t_attachment['id'] ) );
+    			                    $t_content_row = db_fetch_array( $t_content_result );
+    			                    $t_file_contents = $t_content_row['content'];
+    			                    break;
+    			                  
+    			            }
+    			            
+    			            $zip->addFromString($t_row->id.'/attachments/' . $t_attachment['filename'], $t_file_contents);
+    			        }
+    			    }
+			    }
 			} #in_array
 		} #for loop
 
@@ -97,6 +139,6 @@
 	
 	$zip->close();
 	
-	echo file_get_contents($file);
+	readfile( $file );
 
 	unlink ( $file );
