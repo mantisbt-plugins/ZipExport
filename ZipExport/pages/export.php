@@ -97,8 +97,20 @@
 			    
 			    // simple text fields
 			    $t_issue_contents .= '<table>';
-			    $t_issue_contents .= '<tr><td>' . lang_get('email_project') .'</td><td>'  . project_get_name( $t_bug->category_id ) .'</td></tr>';			                                
+			    $t_issue_contents .= '<tr><td>' . lang_get('email_project') .'</td><td>'  . project_get_name( $t_bug->project_id ) .'</td></tr>';			                                
 			    $t_issue_contents .= '<tr><td>' . lang_get('category') .'</td><td>'  . category_full_name( $t_bug->category_id ) .'</td></tr>';
+			    $t_issue_contents .= '<tr><td>' . lang_get('reporter') .'</td><td>'  . prepare_user_name( $t_bug->reporter_id ) .'</td></tr>';
+			    $t_issue_contents .= '<tr><td>' . lang_get('assigned_to') .'</td><td>'  . prepare_user_name( $t_bug->handler_id ) .'</td></tr>';
+			    $t_issue_contents .= '<tr><td>' . lang_get('priority') .'</td><td>'  . get_enum_element( 'priority', $t_bug->priority ) .'</td></tr>';
+			    $t_issue_contents .= '<tr><td>' . lang_get('severity') .'</td><td>'  . get_enum_element( 'severity', $t_bug->severity ) .'</td></tr>';
+			    $t_issue_contents .= '<tr><td>' . lang_get('reproducibility') .'</td><td>'  . get_enum_element( 'reproducibility', $t_bug->reproducibility ) .'</td></tr>';
+			    $t_issue_contents .= '<tr><td>' . lang_get('status') .'</td><td>'  . get_enum_element( 'status', $t_bug->status ) .'</td></tr>';
+			    $t_issue_contents .= '<tr><td>' . lang_get('resolution') .'</td><td>'  . get_enum_element( 'resolution', $t_bug->resolution ) .'</td></tr>';
+			    if ( config_get( 'enable_profiles' ) ) {
+			        $t_issue_contents .= '<tr><td>' . lang_get('platform') .'</td><td>'  . $t_bug->platform .'</td></tr>';
+			        $t_issue_contents .= '<tr><td>' . lang_get('os') .'</td><td>'  .  $t_bug->os  .'</td></tr>';
+			        $t_issue_contents .= '<tr><td>' . lang_get('os_version') .'</td><td>'  . $t_bug->os_version .'</td></tr>';
+			    }
 			    $t_issue_contents .= '</table>';
 			    			    
 			    $t_issue_contents .= "</body></html>";
