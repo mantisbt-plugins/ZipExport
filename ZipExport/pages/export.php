@@ -139,6 +139,27 @@
 			        $t_issue_contents .= '</table>';
 			    }
 			    
+			    // bug notes
+			    
+			    $t_bugnotes = bugnote_get_all_visible_bugnotes( $t_bug->id );
+			    
+			    if ( count ( $t_bugnotes ) > 0 ) {
+			        
+			        $t_issue_contents .= '<h2>'. lang_get( 'bug_notes_title' ) . '</h2>';
+			        
+			        $t_normal_date_format = config_get( 'normal_date_format' );
+			        
+			        $t_issue_contents .= '<table>';
+			        
+			        foreach ( $t_bugnotes as $t_bugnote ) {
+			            
+			            $t_issue_contents .= '<tr><td>' . prepare_user_name($t_bugnote->reporter_id) . '<br >'.
+			                  date( $t_normal_date_format, $t_bugnote->date_submitted ) . '</td><td>'  . $t_bugnote->note .'</td></tr>';
+			        }
+			        
+			        $t_issue_contents .= '</table>';
+			    }
+			    
 			    $t_issue_contents .= "</body></html>";
 			    
 			    $zip->addFromString($t_row->id .'/bug.doc', $t_issue_contents);
