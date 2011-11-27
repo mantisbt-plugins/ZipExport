@@ -80,7 +80,7 @@
 			    
 			    $zip->addEmptyDir($t_row->id);
 			    
-			    $t_issue_contents = '<html><head><style type="text/css">body, h1, td { font-size: 12px; }</style></head><body>';
+			    $t_issue_contents = '<html><head><style type="text/css">body, h1, h2, td { font-size: 12px; }</style></head><body>';
 			    
 			    $t_bug = bug_get($t_row->id, true /* get extended */);
 			    
@@ -125,7 +125,20 @@
 			    }
 			    
 			    $t_issue_contents .= '</table>';
-			    			    
+			    
+			    // relationships
+			    $t_relationships = relationship_get_all_src( $t_bug->id, false );
+			    if ( count ( $t_relationships ) > 0 ) {
+			        
+			        $t_issue_contents .= '<h2>'. lang_get( 'bug_relationships' ) . '</h2>';
+			        
+			        $t_issue_contents .= '<table>';
+			        foreach ( $t_relationships as $t_relationship ) {
+			            $t_issue_contents .= '<tr><td>' . relationship_get_description_src_side ( $t_relationship->type ) .'</td><td>'  . $t_relationship->dest_bug_id . ' - ' . bug_get_field($t_relationship->dest_bug_id,'summary') .'</td></tr>';
+			        }
+			        $t_issue_contents .= '</table>';
+			    }
+			    
 			    $t_issue_contents .= "</body></html>";
 			    
 			    $zip->addFromString($t_row->id .'/bug.doc', $t_issue_contents);
