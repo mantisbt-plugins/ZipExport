@@ -56,7 +56,7 @@
 	
 	$file = tempnam("tmp", "zip");
 	$zip = new ZipArchive();
-	$zip->open($file, ZIPARCHIVE::OVERWRITE);
+	$zip->open($file, ZIPARCHIVE::CREATE);
 
 	$t_user_id = auth_get_current_user_id();
 	
@@ -77,8 +77,6 @@
 			$t_bug = null;
 
 			if ( is_blank( $f_export ) || in_array( $t_row->id, $f_bug_arr ) ) {
-			    
-			    $zip->addEmptyDir($t_row->id);
 			    
 			    $t_issue_contents = '<html><head><style type="text/css">
 			        body, h1, h2, td { font-size: 12px; } 
