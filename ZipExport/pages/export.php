@@ -80,7 +80,12 @@
 			    
 			    $zip->addEmptyDir($t_row->id);
 			    
-			    $t_issue_contents = '<html><head><style type="text/css">body, h1, h2, td { font-size: 12px; } td { vertical-align: top; padding: 1px }</style></head><body>';
+			    $t_issue_contents = '<html><head><style type="text/css">
+			        body, h1, h2, td { font-size: 12px; } 
+			        td { vertical-align: top; padding: 3px }
+			        table, tr, td { border: 1px solid black }
+			        table { border-collapse: collapse }
+			    </style></head><body>';
 			    
 			    $t_bug = bug_get($t_row->id, true /* get extended */);
 			    
