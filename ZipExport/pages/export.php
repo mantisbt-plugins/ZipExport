@@ -62,6 +62,9 @@
 	
 	$t_bug_file_table = db_get_table( 'mantis_bug_file_table' );
 	
+	$t_fields = config_get( 'bug_view_page_fields' );
+	$t_fields = columns_filter_disabled( $t_fields );
+	
 	do
 	{
 		$t_more = true;
@@ -76,11 +79,35 @@
 			if ( is_blank( $f_export ) || in_array( $t_row->id, $f_bug_arr ) ) {
 			    
 			    $zip->addEmptyDir($t_row->id);
-			    $zip->addFromString($t_row->id .'/bug.txt', 'Here is a bug file');
+			    
+			    $t_issue_contents = '<html><head><style type="text/css">body, h1, td { font-size: 12px; }</style></head><body>';
+			    
+			    $t_bug = bug_get($t_row->id, true /* get extended */);
+			    
+			    // summary
+			    $t_issue_contents .= "<h1>Bug #". $t_bug->id .": ".$t_bug->summary."</h1>";
+			    // link
+			    $t_issue_link = config_get_global( 'path' ) . string_get_bug_view_url( $t_bug->id );
+			    $t_issue_contents .= "<p><a href=\"$t_issue_link\">$t_issue_link</a></p>";
+			    
+			    // description, steps to reproduce, additional info
+			    $t_issue_contents .= '<p>' . lang_get( 'description' ) . ' : ' . $t_bug->description . ' </p>';
+			    $t_issue_contents .= '<p>' . lang_get( 'steps_to_reproduce' ) . ' : ' . $t_bug->steps_to_reproduce . ' </p>';
+			    $t_issue_contents .= '<p>' . lang_get( 'additional_information' ) . ' : ' . $t_bug->additional_information . ' </p>';
+			    
+			    // simple text fields
+			    $t_issue_contents .= '<table>';
+			    $t_issue_contents .= '<tr><td>' . lang_get('email_project') .'</td><td>'  . project_get_name( $t_bug->category_id ) .'</td></tr>';			                                
+			    $t_issue_contents .= '<tr><td>' . lang_get('category') .'</td><td>'  . category_full_name( $t_bug->category_id ) .'</td></tr>';
+			    $t_issue_contents .= '</table>';
+			    			    
+			    $t_issue_contents .= "</body></html>";
+			    
+			    $zip->addFromString($t_row->id .'/bug.doc', $t_issue_contents);
 			    
 			    if ( file_can_download_bug_attachments( $t_row->id, $t_user_id ) ) {
     			    $t_attachments = bug_get_attachments( $t_row->id );
-    			    if ( sizeof ( $t_attachments ) > 0 ) {
+    			    if ( count ( $t_attachments ) > 0 ) {
     			        foreach ( $t_attachments as $t_attachment ) {
     			            
     			            $t_file_contents;
