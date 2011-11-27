@@ -157,7 +157,7 @@
 			        foreach ( $t_bugnotes as $t_bugnote ) {
 			            
 			            $t_issue_contents .= '<tr><td>' . prepare_user_name($t_bugnote->reporter_id) . '<br >'.
-			                  date( $t_normal_date_format, $t_bugnote->date_submitted ) . '</td><td>'  . $t_bugnote->note .'</td></tr>';
+			                  date( $t_normal_date_format, $t_bugnote->date_submitted ) . '</td><td>'  . string_display_links($t_bugnote->note) .'</td></tr>';
 			        }
 			        
 			        $t_issue_contents .= '</table>';
