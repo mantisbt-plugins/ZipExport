@@ -21,14 +21,14 @@ class ZipExportPlugin extends MantisPlugin {
         $this->name = plugin_lang_get("title");
         $this->description = plugin_lang_get("description");
 
-        $this->version = "1.0";
+        $this->version = "2.0";
         $this->requires = array(
-			"MantisCore" => "1.2.8"
+			"MantisCore" => "2.0.0"
         );
 
-        $this->author = "Robert Munteanu";
-        $this->contact = "robert@lmn.ro";
-        $this->url ="http://www.mantisbt.org/wiki/doku.php/mantisbt:zipexport";
+        $this->author = "Robert Munteanu/Cas Nuy";
+        $this->contact = "robert@lmn.ro/cas-at-nuy.info";
+        $this->url ="http://www.mnuy.info/mantis2";
     }
     
     public function hooks() {
@@ -44,17 +44,8 @@ class ZipExportPlugin extends MantisPlugin {
         
         if ( ! access_has_project_level( $t_required_level ) )
             return;
-        
-        // TODO: remove OB once we have echo_link in MantisBT core
-        ob_start();
-        echo '&#160;';
-        print_link( plugin_page('export.php'), plugin_lang_get( 'export_related_issues_link' ));
-        
-        $link = ob_get_contents();
-        
-        ob_end_clean();
-        
-        return $link;
+
+		return array( '<a class="btn btn-sm btn-primary btn-white btn-round" href="' .plugin_page( 'export.php' ) . '">' . plugin_lang_get( 'export_related_issues_link' ) . '</a>', );
     }
     
     function config() {
@@ -63,4 +54,3 @@ class ZipExportPlugin extends MantisPlugin {
         );
     }
 }
-?>

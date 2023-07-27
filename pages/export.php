@@ -1,5 +1,6 @@
 <?php
-# MantisBT - a php based bugtracking system
+<?PHP
+# MantisBT - A PHP based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,25 +15,53 @@
 # You should have received a copy of the GNU General Public License
 # along with MantisBT.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * ZIP export page
+ *
+ * @package MantisBT
+ * @copyright Copyright 2000 - 2002  Kenzaburo Ito - kenito@300baud.org
+ * @copyright Copyright 2002  MantisBT Team - mantisbt-dev@lists.sourceforge.net
+ * @link http://www.mantisbt.org
+ *
+ * @uses core.php
+ * @uses authentication_api.php
+ * @uses bug_api.php
+ * @uses columns_api.php
+ * @uses config_api.php
+ * @uses excel_api.php
+ * @uses file_api.php
+ * @uses filter_api.php
+ * @uses gpc_api.php
+ * @uses helper_api.php
+ * @uses print_api.php
+ * @uses utility_api.php
+ */
 
-    // Code based on the excel_xml_export.php from MantisBT
-	require_once( 'core.php' );
+# Prevent output of HTML in the content if errors occur
+define( 'DISABLE_INLINE_ERROR_REPORTING', true );
 
-	require_once( 'current_user_api.php' );
-	require_once( 'bug_api.php' );
-	require_once( 'string_api.php' );
-	require_once( 'columns_api.php' );
-	require_once( 'excel_api.php' );
+require_once( 'core.php' );
+require_api( 'authentication_api.php' );
+require_api( 'bug_api.php' );
+require_api( 'columns_api.php' );
+require_api( 'config_api.php' );
+require_api( 'excel_api.php' );
+require_api( 'file_api.php' );
+require_api( 'filter_api.php' );
+require_api( 'gpc_api.php' );
+require_api( 'helper_api.php' );
+require_api( 'print_api.php' );
+require_api( 'utility_api.php' );
 
-	require( 'print_all_bug_options_inc.php' );
-	
-	auth_ensure_user_authenticated();
+auth_ensure_user_authenticated();
 
-	$t_required_level = plugin_config_get('export_access_level_threshold');
-	access_ensure_project_level( $t_required_level );
-	
-	$f_export = gpc_get_string( 'export', '' );
+$f_export = gpc_get_string( 'export', '' );
 
+helper_begin_long_process();
+
+$t_export_title = excel_get_default_filename();
+
+$t_short_date_format = config_get( 'short_date_format' );
 	helper_begin_long_process();
 	
 	# This is where we used to do the entire actual filter ourselves
@@ -47,7 +76,7 @@
 	}
 	
 	$t_export_title = excel_get_default_filename();
-	
+
 	header( 'Content-Type: application/zip; charset=UTF-8' );
 	header( 'Pragma: public' );
 	header( 'Content-Disposition: attachment; filename="' . urlencode( file_clean_name( $t_export_title ) ) . '.zip"' ) ;
@@ -59,17 +88,15 @@
 	$zip->open($file, ZIPARCHIVE::CREATE);
 
 	$t_user_id = auth_get_current_user_id();
-	
-	$t_bug_file_table = db_get_table( 'mantis_bug_file_table' );
-	
+
 	$t_fields = config_get( 'bug_view_page_fields' );
 	$t_fields = columns_filter_disabled( $t_fields );
-	
+
 	do
 	{
 		$t_more = true;
 		$t_row_count = count( $result );
-		
+		echo $t_row_count;
 		$row_number = 0;
 
 		for( $i = 0; $i < $t_row_count; $i++ ) {
@@ -85,7 +112,7 @@
 			        table { border-collapse: collapse }
 			    </style></head><body>';
 			    
-			    $t_bug = bug_get($t_row->id, true /* get extended */);
+			    $t_bug = bug_get($t_row->id, true );
 			    
 			    // summary
 			    $t_issue_contents .= "<h1>Bug #". $t_bug->id .": ".$t_bug->summary."</h1>";
@@ -179,7 +206,8 @@
 			    }
 			    
 			    $t_issue_contents .= "</body></html>";
-			    
+
+				echo $t_issue_contents;
 			    $zip->addFromString($t_row->id .'/bug.doc', $t_issue_contents);
 			    
 			    if ( file_can_download_bug_attachments( $t_row->id, $t_user_id ) ) {
@@ -209,8 +237,8 @@
     			                    
     			                case DATABASE:
     			                    
-    			                    $t_content_query =  "SELECT content FROM $t_bug_file_table WHERE id=" . db_param();
-    			                    $t_content_result = db_query_bound( $t_content_query, Array( $t_attachment['id'] ) );
+    			                    $t_content_query =  "SELECT content FROM {bug_file} WHERE id=" . db_param();
+    			                    $t_content_result = db_query( $t_content_query, Array( $t_attachment['id'] ) );
     			                    $t_content_row = db_fetch_array( $t_content_result );
     			                    $t_file_contents = $t_content_row['content'];
     			                    break;
@@ -246,3 +274,4 @@
 	readfile( $file );
 
 	unlink ( $file );
+	echo $file;
