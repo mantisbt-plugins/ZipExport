@@ -21,7 +21,7 @@ class ZipExportPlugin extends MantisPlugin {
         $this->name = plugin_lang_get("title");
         $this->description = plugin_lang_get("description");
 
-        $this->version = "2.0";
+        $this->version = "2.10";
         $this->requires = array(
 			"MantisCore" => "2.0.0"
         );
@@ -29,6 +29,7 @@ class ZipExportPlugin extends MantisPlugin {
         $this->author = "Cas Nuy";
         $this->contact = "cas-at-nuy.info";
         $this->url ="https://github.com/mantisbt-plugins/ZipExport";
+		$this->page = "config";
     }
     
     public function hooks() {
