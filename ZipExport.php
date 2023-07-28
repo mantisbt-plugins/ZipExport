@@ -26,9 +26,9 @@ class ZipExportPlugin extends MantisPlugin {
 			"MantisCore" => "2.0.0"
         );
 
-        $this->author = "Robert Munteanu/Cas Nuy";
-        $this->contact = "robert@lmn.ro/cas-at-nuy.info";
-        $this->url ="http://www.mnuy.info/mantis2";
+        $this->author = "Cas Nuy";
+        $this->contact = "cas-at-nuy.info";
+        $this->url ="https://github.com/mantisbt-plugins/ZipExport";
     }
     
     public function hooks() {
