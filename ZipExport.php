@@ -1,6 +1,4 @@
 <?php
-# Copyright (c) 2011 Robert Munteanu (robert@lmn.ro)
-
 # Zip export for MantisBT is free software: 
 # you can redistribute it and/or modify it under the terms of the GNU
 # General Public License as published by the Free Software Foundation, 
@@ -21,7 +19,7 @@ class ZipExportPlugin extends MantisPlugin {
         $this->name = plugin_lang_get("title");
         $this->description = plugin_lang_get("description");
 
-        $this->version = "2.10";
+        $this->version = "2.11";
         $this->requires = array(
 			"MantisCore" => "2.0.0"
         );

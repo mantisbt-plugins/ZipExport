@@ -12,4 +12,4 @@ plugin_config_set( 'export_access_level_threshold', $f_threshold );
 
 
 // redirect
-print_successful_redirect( plugin_page( 'config',TRUE ) );
+print_header_redirect( plugin_page( 'config',TRUE ) );

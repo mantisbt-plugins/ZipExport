@@ -1,5 +1,4 @@
 <?php
-<?PHP
 # MantisBT - A PHP based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -272,6 +271,5 @@ $t_short_date_format = config_get( 'short_date_format' );
 	$zip->close();
 	
 	readfile( $file );
-
 	unlink ( $file );
 	echo $file;

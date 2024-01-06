@@ -1,7 +1,7 @@
 # ZipExport
 This plugin allows exporting multiple issues as a Zip archive.
 In the View issues pages you can define your filter and once you are happy with the filterd results, simply click on the "Zip export" button.
-The archive will  be donwloaded to your pc for whatever reason you need that.
+The archive will  be downloaded to your pc for whatever reason you need that.
 
 Installation is like any other plugin:
 1. Download the plugin from Github
