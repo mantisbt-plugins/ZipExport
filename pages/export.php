@@ -138,7 +138,7 @@ $t_short_date_format = config_get( 'short_date_format' );
 			    
 			    // versions
 			    $t_version_rows = version_get_all_rows( $t_bug->project_id );
-		        $t_product_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, version_get_id( $t_bug->version, $t_bug->project_id ), $t_version_rows ) );
+//		        $t_product_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, version_get_id( $t_bug->version, $t_bug->project_id ), $t_version_rows ) );
 		        $t_issue_contents .= '<tr><td>' . lang_get('product_version') .'</td><td>'  . $t_product_version_string .'</td></tr>';
 		        
 		        if ( access_has_bug_level( config_get( 'roadmap_view_threshold' ), $t_bug->id ) )  {
@@ -146,7 +146,7 @@ $t_short_date_format = config_get( 'short_date_format' );
 		            $t_issue_contents .= '<tr><td>' . lang_get('target_version') .'</td><td>'  . $t_target_version_string .'</td></tr>';
 		        }
 		        
-		        $t_fixed_in_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, version_get_id( $t_bug->fixed_in_version, $t_bug->project_id ), $t_version_rows ) );
+	//	        $t_fixed_in_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, version_get_id( $t_bug->fixed_in_version, $t_bug->project_id ), $t_version_rows ) );
 		        $t_issue_contents .= '<tr><td>' . lang_get('fixed_in_version') .'</td><td>'  . $t_fixed_in_version_string .'</td></tr>';
 			    
 		        // profile
