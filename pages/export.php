@@ -1,4 +1,4 @@
-<?php
+<?PHP
 # MantisBT - A PHP based bugtracking system
 
 # MantisBT is free software: you can redistribute it and/or modify
@@ -83,6 +83,8 @@ $t_short_date_format = config_get( 'short_date_format' );
 	$f_bug_arr = explode( ',', $f_export );
 	
 	$file = tempnam("tmp", "zip");
+
+
 	$zip = new ZipArchive();
 	$zip->open($file, ZIPARCHIVE::CREATE);
 
@@ -138,27 +140,35 @@ $t_short_date_format = config_get( 'short_date_format' );
 			    
 			    // versions
 			    $t_version_rows = version_get_all_rows( $t_bug->project_id );
-		        $t_product_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, version_get_id( $t_bug->version, $t_bug->project_id ), $t_version_rows ) );
+				$vid = version_get_id( $t_bug->version, $t_bug->project_id );
+				if ( $vid <>"") {
+					$t_product_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, $vid, $t_version_rows ) );
+				}
+
 		        $t_issue_contents .= '<tr><td>' . lang_get('product_version') .'</td><td>'  . $t_product_version_string .'</td></tr>';
-		        
+        
 		        if ( access_has_bug_level( config_get( 'roadmap_view_threshold' ), $t_bug->id ) )  {
-		            $t_target_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, version_get_id( $t_bug->target_version, $t_bug->project_id ), $t_version_rows ) );
+					if ( $vid <>"") {
+						$t_target_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, $vid), $t_version_rows ) );
+					}
 		            $t_issue_contents .= '<tr><td>' . lang_get('target_version') .'</td><td>'  . $t_target_version_string .'</td></tr>';
 		        }
-		        
-		        $t_fixed_in_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, version_get_id( $t_bug->fixed_in_version, $t_bug->project_id ), $t_version_rows ) );
+	        
+				if ( $vid <>"") {
+					$t_fixed_in_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, $vid, $t_version_rows ) );
+				}
 		        $t_issue_contents .= '<tr><td>' . lang_get('fixed_in_version') .'</td><td>'  . $t_fixed_in_version_string .'</td></tr>';
-			    
+				    
 		        // profile
 			    if ( config_get( 'enable_profiles' ) ) {
 			        $t_issue_contents .= '<tr><td>' . lang_get('platform') .'</td><td>'  . $t_bug->platform .'</td></tr>';
 			        $t_issue_contents .= '<tr><td>' . lang_get('os') .'</td><td>'  .  $t_bug->os  .'</td></tr>';
 			        $t_issue_contents .= '<tr><td>' . lang_get('os_version') .'</td><td>'  . $t_bug->os_version .'</td></tr>';
 			    }
-			    
+		    
 			    // custom fields
 			    $t_related_custom_field_ids = custom_field_get_linked_ids( $t_bug->project_id );
-			    
+				    
 			    foreach( $t_related_custom_field_ids as $t_id ) {
 			        if ( !custom_field_has_read_access( $t_id, $t_bug->id ) )
 			            continue;
@@ -169,7 +179,7 @@ $t_short_date_format = config_get( 'short_date_format' );
 			    }
 			    
 			    $t_issue_contents .= '</table>';
-			    
+				    
 			    // relationships
 			    $t_relationships = relationship_get_all_src( $t_bug->id, false );
 			    if ( count ( $t_relationships ) > 0 ) {
@@ -182,7 +192,7 @@ $t_short_date_format = config_get( 'short_date_format' );
 			        }
 			        $t_issue_contents .= '</table>';
 			    }
-			    
+		    
 			    // bug notes
 			    
 			    $t_bugnotes = bugnote_get_all_visible_bugnotes( $t_bug->id , 'DESC', 0);
@@ -203,7 +213,7 @@ $t_short_date_format = config_get( 'short_date_format' );
 			        
 			        $t_issue_contents .= '</table>';
 			    }
-			    
+				    
 			    $t_issue_contents .= "</body></html>";
 
 				echo $t_issue_contents;
@@ -271,5 +281,6 @@ $t_short_date_format = config_get( 'short_date_format' );
 	$zip->close();
 	
 	readfile( $file );
+
 	unlink ( $file );
 	echo $file;

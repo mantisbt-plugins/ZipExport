@@ -2,3 +2,4 @@
 27-07-2023	version 2.0		Added compatability for version 2.x
 28-07-2023	version 2.10	Added configuration screen
 06-01-2024	version 2.11	Replaced  deprecated function print_succesful_redirect with print_header_redirect
+23-09-2024	version 2.12	Included a check on version-id
