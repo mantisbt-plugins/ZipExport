@@ -140,6 +140,7 @@ $t_short_date_format = config_get( 'short_date_format' );
 			    
 			    // versions
 			    $t_version_rows = version_get_all_rows( $t_bug->project_id );
+
 				$vid = version_get_id( $t_bug->version, $t_bug->project_id );
 				if ( $vid <>"") {
 					$t_product_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, $vid, $t_version_rows ) );
@@ -153,6 +154,7 @@ $t_short_date_format = config_get( 'short_date_format' );
 					}
 		            $t_issue_contents .= '<tr><td>' . lang_get('target_version') .'</td><td>'  . $t_target_version_string .'</td></tr>';
 		        }
+
 	        
 				if ( $vid <>"") {
 					$t_fixed_in_version_string  = string_display_line ( prepare_version_string( $t_bug->project_id, $vid, $t_version_rows ) );
