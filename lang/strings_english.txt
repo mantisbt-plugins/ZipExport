@@ -18,3 +18,4 @@ $s_plugin_ZipExport_title = 'Zip export';
 $s_plugin_ZipExport_description = 'Allows exporting multiple issues as a Zip archive';
 $s_plugin_ZipExport_export_related_issues_link = 'Zip export';
 $s_plugin_ZipExport_export_access_level_threshold = 'Required level for exporting';
+$s_plugin_ZipExport_config = 'configuration';
